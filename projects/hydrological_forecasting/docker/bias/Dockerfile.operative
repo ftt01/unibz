@@ -1,0 +1,23 @@
+FROM rocker/r-base:latest
+
+RUN apt-get update 
+# && apt-get -y upgrade
+RUN apt-get -y install libssl-dev libcurl4-openssl-dev libxml2-dev
+
+RUN R -e "install.packages('littler', dependencies=TRUE)"
+
+RUN install2.r --error --deps TRUE\
+    rjson \
+    matrixStats \
+    Metrics \
+    logging \
+    optparse \
+    readr \
+    futile.logger
+
+COPY etc/conf/bias/parameters.json /home/rstudio/etc/conf/
+COPY src/bin/bias/main.R /home/rstudio/src/
+
+WORKDIR /home/rstudio/
+
+ENTRYPOINT [ "Rscript", "/home/rstudio/src/main.R" ]

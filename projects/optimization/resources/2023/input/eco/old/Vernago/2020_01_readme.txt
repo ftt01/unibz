@@ -1,0 +1,13 @@
+NOTA:
+le time series di prezzo in questa cartella NON sono da prendere come riferimento, ma servono solo per impostare gli script e l'ottimizzatore!!
+NON usarli per altri lavori al di fuori del test per verificare il sistema di input/output/plot dell'ottimizzatore
+
+Nicola Di Marco
+16/01/2020
+
+***********************
+
+Please do not use the time series of this folder except for testing input/output/plotting scripts. Data are not checked properly.
+
+Nicola Di Marco
+16/01/2020

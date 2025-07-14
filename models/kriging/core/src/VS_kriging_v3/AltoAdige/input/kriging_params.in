@@ -1,0 +1,13 @@
+11954.3533	0	0	3.2474	0.3667			! Parameters for kriging (I_a, I_e, m, var, var_nug) --> variogr. precip.
+31847.2260	0	0	16.6665	9.8750			! Parameters for kriging (I_a, I_e, m, var, var_nug) --> variogr. temperature						
+32543.34  -999  -999  9.728997 5.344437     ! Parameters for kriging (I_a, I_e, m, var, var_nug) --> TMIN						
+22467.4   -999  -999  13.3636 11.3634       ! Parameters for kriging (I_a, I_e, m, var, var_nug) --> TMAX						
+8			    	! nk: number of neighbour meteorological stations used in the kriging		,,,,
+OKED   			    ! Type of Kriging OK, OKED			,,,
+EXP				    ! Model equation EXP, DBLE_EXP --> modello di semivariogramma,,,
+DEUTSCH				! Correction of negative weights NO, RESET, ADD, DEUTSCH --> pesi negativi ogni tanto, per avere sum(pesi)=1	
+3600				! Output time step [s]		,,,,
+P					! P = Rainfall,  T = Temperature	,,,
+2010/01/01 00:00	! Starting date (measurements) yyyy/mm/dd hh:mm					,,,,
+AltoAdige           ! Bacino				,,,,
+0					! flag_varcond: 1--> evaluate conditional variance (0 --> otherwise)	,,,,

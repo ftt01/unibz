@@ -1,0 +1,38 @@
+{
+    "temperature": {
+        "output_path": "/media/windows/data/meteo/eu/it/taa/aa/AA_weather_data/temperature/",
+        "nodes": [
+            {
+                "name": "plan",
+                "output_file": "128.txt"
+            },
+            {
+                "name": "merano",
+                "output_file": "101.txt"
+            }
+        ],
+        "index_col": "0",
+        "parse_dates": "True",
+        "skiprows": "4"
+    },
+    "discharge": {
+        "output_path": "/media/windows/projects/era5_bias/02_calibration_validation/hydro_modelling/Passirio/meteo/streamflow/",
+        "nodes": [
+            {
+                "id": "values",
+                "name": "plan",
+                "output_file": "155.txt"
+            },
+            {
+                "id": "values",
+                "name": "merano",
+                "output_file": "118.txt"
+            }
+        ],
+        "index_col": "0",
+        "parse_dates": "True",
+        "skiprows": "5",
+        "header" : "None",
+        "names" : "['values']"
+    }
+}

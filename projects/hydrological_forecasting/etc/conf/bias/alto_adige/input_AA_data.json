@@ -1,0 +1,38 @@
+{
+  "project_name": "hydrological_forecasting",
+  "provider_name": "meteoaltoadige",
+  "model": {
+    "name": "ground_stations",
+    "ensemble": 1,
+    "lead_hours": 48,
+    "releases": [
+      0,3,6,9,12,15,18,21
+    ]
+  },
+  "input": {
+    "path": "/media/lacie2022/data/meteo/eu/it/taa/aa/online/",
+    "datetime_format": "%Y-%m-%dT%H:%M:%SZ%z",
+    "timezone": "UTC"
+  },
+  "output": {
+    "path": "/media/windows/projects/hydro_forecasting/bias_correction/input/provinz/",
+    "datetime_format": "%Y-%m-%d %H:%M:%S",
+    "timezone": "UTC"
+  },
+  "log_path": "/media/windows/projects/hydro_forecasting/bias_correction/logs/",
+  "start_date": "20211001",
+  "start_time": null,
+  "end_date": "20231231",
+  "end_time": null,
+  "update_dates": false,
+  "delete_uncomplete" : false,
+  "roi_config": "/home/daniele/documents/github/ftt01/phd/metadata/basins/B001/B001_SB009.json",
+  "stations_to_extract": null,
+  "variables_to_extract": null,
+  "logging_level": "info",
+  "script_authors": [
+    "ftt01 (dallatorre.daniele@gmail.com)"
+  ],
+  "script_version": "v0.4.0",
+  "email": false
+}

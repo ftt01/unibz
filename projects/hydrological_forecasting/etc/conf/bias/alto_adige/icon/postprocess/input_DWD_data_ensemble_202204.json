@@ -1,0 +1,47 @@
+{
+  "project_name": "hydrological_forecasting",
+  "provider_name": "dwd",
+  "model": {
+    "name": "icon-d2-eps",
+    "ensemble": 20,
+    "resolution": 0.02,
+    "release": [
+      3
+    ],
+    "variables": {
+      "precipitation" : "tot_prec",
+      "temperature" : "t_2m",
+      "snow" : "w_snow"
+    },
+    "lead_hours": 48,
+    "timezone": "UTC"
+  },
+  "input_path": "/media/lacie2022/data/meteo/dwd/icon-d2-eps/00_cropped/",
+  "output": {
+    "path": "/media/windows/projects/hydro_forecasting/bias_correction/input/icon/",
+    "datetime_format": "%Y-%m-%d %H:%M:%S",
+    "timezone": "UTC",
+    "type": [
+      "mean",
+      "ensemble"
+    ],
+    "variables": [
+      "precipitation",
+      "temperature",
+      "snow"
+    ],
+    "extension": "csv"
+  },
+  "log_path": "/media/windows/projects/hydro_forecasting/bias_correction/logs/",
+  "start_date": "20220401",
+  "end_date": "20220501",
+  "update_start_date": false,
+  "regrid": false,
+  "generate_meta": false,
+  "apply_preprocess": false,
+  "apply_postprocess": true,
+  "roi_config": "/home/daniele/documents/github/ftt01/phd/metadata/basins/phd/B002.json",
+  "logging_level": "info",
+  "email": false,
+  "script_version": "v0.3.0"
+}

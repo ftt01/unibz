@@ -1,0 +1,67 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "dependsOn" : [
+                "cd_to_build",
+                "compile"
+            ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "cd_to_build",
+            "type": "shell",
+            "command": "cd ${cwd}/src/"
+        },
+        {
+            "label": "compile",
+            "type": "shell",
+            "command": "ifort",
+            "args": [
+                "-o",
+                "kriging_v3",
+                "-module",
+                "${cwd}/mod/",
+                "${cwd}/src/Common_modules.F90",
+                "${cwd}/src/Common_geometry.F90",
+                "${cwd}/src/Eval_dailyET.F90",
+                "${cwd}/src/Eval_dailyT.F90",
+                "${cwd}/src/Kriging_algorithm.F90",
+                "${cwd}/src/Kriging_input.F90",
+                "${cwd}/src/Kriging_output.F90",
+                "${cwd}/src/Kriging_main.F90"
+            ],
+            "group": "build"
+        },{
+            "label": "debug",
+            "type": "shell",
+            "command":"ifort",
+            "args": [
+                "-g",
+                "-check",
+                "all",
+                "-fpe0",
+                "-warn",
+                "-traceback",
+                "-debug",
+                "extended",
+                "-o",
+                "kriging_v3",
+                "-module",
+                "${cwd}/mod/",
+                "${cwd}/src/Common_modules.F90",
+                "${cwd}/src/Common_geometry.F90",
+                "${cwd}/src/Eval_dailyET.F90",
+                "${cwd}/src/Eval_dailyT.F90",
+                "${cwd}/src/Kriging_algorithm.F90",
+                "${cwd}/src/Kriging_input.F90",
+                "${cwd}/src/Kriging_output.F90",
+                "${cwd}/src/Kriging_main.F90"]
+        }
+    ]
+}

@@ -1,0 +1,93 @@
+{
+    "precipitation": {
+        "id": "Rain",
+        "output_file": "out_prec_temp.txt",
+        "index_col": "0",
+        "parse_dates": "True"
+    },
+    "temperature": {
+        "id": "T_intercept",
+        "output_file": "out_prec_temp.txt",
+        "index_col": "0",
+        "parse_dates": "True"
+    },
+    "snow": {
+        "id": "Snow",
+        "output_file": "out_prec_temp.txt",
+        "index_col": "0",
+        "parse_dates": "True"
+    },
+    "snow_we": {
+        "id": "WE_basin",
+        "output_file": "out_wu_WE_melt.txt",
+        "index_col": "0",
+        "parse_dates": "True",
+        "sep": ","
+    },
+    "snow_we_plan": {
+        "id": "WE_plan",
+        "output_file": "out_wu_WE_melt.txt",
+        "index_col": "0",
+        "parse_dates": "True",
+        "sep": ","
+    },
+    "sca_passirio": {
+        "id": "sca",
+        "output_file": "out_wu_WE_melt.txt",
+        "index_col": "0",
+        "parse_dates": "True",
+        "sep": ","
+    },
+    "swe_niv1": {
+        "id": "WEniv_plan",
+        "output_file": "out_wu_WE_melt.txt",
+        "index_col": "0",
+        "parse_dates": "True",
+        "sep": ","
+    },
+    "swe_niv2": {
+        "id": "WEniv_prati",
+        "output_file": "out_wu_WE_melt.txt",
+        "index_col": "0",
+        "parse_dates": "True",
+        "sep": ","
+    },
+    "swe_niv3": {
+        "id": "WEniv_plata",
+        "output_file": "out_wu_WE_melt.txt",
+        "index_col": "0",
+        "parse_dates": "True",
+        "sep": ","
+    },
+    "swe_niv4": {
+        "id": "WEniv_stmartino",
+        "output_file": "out_wu_WE_melt.txt",
+        "index_col": "0",
+        "parse_dates": "True",
+        "sep": ","
+    },
+    "swe_niv5": {
+        "id": "WEniv_alpe",
+        "output_file": "out_wu_WE_melt.txt",
+        "index_col": "0",
+        "parse_dates": "True",
+        "sep": ","
+    },
+    "discharge": {
+        "nodes": [
+            {
+                "name": "plan",
+                "id": "15",
+                "output_file": "out_flow.txt"
+            },
+            {
+                "name": "merano",
+                "id": "58",
+                "output_file": "out_flow.txt"
+            }
+        ],
+        "index_col": "0",
+        "parse_dates": "True",
+        "skiprows": "0"
+    }
+}

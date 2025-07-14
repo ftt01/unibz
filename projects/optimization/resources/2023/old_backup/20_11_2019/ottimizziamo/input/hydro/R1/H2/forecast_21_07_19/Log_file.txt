@@ -1,0 +1,28 @@
+Configuration files and initializiation of the model correctly set
+Run mode:  FORECASTING                                                 
+ID run:  112
+Parameter file: hydro_parameters_GLUE_9978.txt                    
+Forecasted T not corrected
+Forecasted P not corrected
+Warm-up time from: 2018-10-02 08:00:00
+Warm-up time to: 2019-07-01 07:00:00
+Simulated time from: 2019-07-21 08:00:00
+Simulated time from: 2019-07-23 07:00:00
+Output path: ../Passirio/OUTPUT/FORECASTING/Nens_1/open_loop/output_112/
+Preprocessing set
+
+Reading ../Passirio/meteo/observed/temperature.txt
+Reading ../Passirio/meteo/observed/precipitation.txt
+Interpolate weather data was not necessary
+Observed data correctly interpolated and archiviated
+
+../Passirio/meteo/observed/-999.smet does not exist!
+Warm-up done!
+Open-loop is running...
+Open-loop done!
+Forecast is running...
+Reading T correction file:  ../Passirio/meteo/forecasted/WRF_T_correction.txt NOT FOUND
+Applying Thiessen polygon to the forecasted P...
+   Precipitation successfully interpolated
+Printing output files...
+Simulation done!

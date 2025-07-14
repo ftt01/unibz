@@ -1,0 +1,17 @@
+{
+    "project_name" : "hydrological_forecasting",
+
+    "provider_name" : "meteoaltoadige",
+
+    "input_path": "/media/windows/projects/pp/SHARED/machine_learning/input/training/B001/SB007/R003/",
+    "output_path": "/media/windows/projects/pp/SHARED/machine_learning/input/training/B001/SB007/R003/stats/",
+    "log_path" : "/media/windows/projects/pp/SHARED/machine_learning/input/training/B001/SB007/R003/stats/logs/",
+
+    "input_datetime_format" : "%Y-%m-%d %H:%M:%S",
+    "input_timezone" : "Europe/Rome",
+
+    "script_version" : "v0.4.0",
+    "script_authors" : ["ftt01 (dallatorre.daniele@gmail.com)"],
+    
+    "logging_level" : "info"
+}

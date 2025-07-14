@@ -1,0 +1,22 @@
+{
+  "project_name": "pp",
+  "module": "bias",
+  "forecasting_horizon": [
+    48
+  ],
+  "_T_comment": "T_RWM = rolling window mean, attribute = N. of samples",
+  "T_forecasting_method": "T_RWM",
+  "T_attribute_for_met": [
+    3
+  ],
+  "_P_comment": "MWHB = mass and wet hours balance",
+  "P_forecasting_method": "P_MWHB",
+  "P_attribute_for_met": [
+    0
+  ],
+  "code_info": {
+    "script_version": "v1.0.0",
+    "operating System": "linux",
+    "logging_level": "info"
+  }
+}

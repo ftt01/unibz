@@ -1,0 +1,50 @@
+{
+  "project_name": "hydrological_forecasting",
+  "historical_data": {
+    "provider_name": "meteoaltoadige",
+    "lag_hours": 168,
+    "input_path": "/media/windows/projects/aa-data-driven/paper/03_icon/training/input/data/",
+    "datetime_format": "%Y-%m-%dT%H:%M:%SZ%z",
+    "timezone": "UTC"
+  },
+  "forecasting_data": {
+    "provider_name": "dwd",
+    "model_name": "icon-d2-eps",
+    "ensemble": 20,
+    "releases": [
+      6
+    ],
+    "path": "/media/windows/projects/aa-data-driven/paper/03_icon/input/data/icon/postprocessed/",
+    "datetime_format": "%Y-%m-%d %H:%M:%S",
+    "timezone": "UTC"
+  },
+  "ml_model": {
+    "input": {
+      "path": "/media/windows/projects/aa-data-driven/paper/03_icon/testing/input/",
+      "datetime_format": "%Y-%m-%d %H:%M:%S",
+      "timezone": "UTC"
+    },
+    "output": {
+      "path": "/media/windows/projects/aa-data-driven/paper/03_icon/testing/output/",
+      "datetime_format": "%Y-%m-%d %H:%M:%S",
+      "timezone": "UTC",
+      "fct_start_time": null,
+      "fct_lead_hours": 48,
+      "type": "mean"
+    }
+  },
+  "start_date": null,
+  "end_date": null,
+  "update_start_date": false,
+  "log_path": "/media/windows/projects/aa-data-driven/paper/03_icon/logs/testing/",
+  "logging_level": "info",
+  "script_authors": [
+    "ftt01 (dallatorre.daniele@gmail.com)"
+  ],
+  "script_version": "v0.5.0",
+  "script_libs" : [
+    "/home/daniele/documents/github/ftt01/phd/share/lib/", 
+    "/home/daniele/documents/github/ftt01/phd/projects/hydrological_forecasting/resources/",
+    "/home/daniele/documents/github/ftt01/phd/projects/hydrological_forecasting/resources/ml/operative/" ],
+  "email": false
+}

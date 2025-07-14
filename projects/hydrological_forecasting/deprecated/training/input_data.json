@@ -1,0 +1,36 @@
+{
+  "project_name": "hydrological_forecasting",
+  "provider_name": "meteoaltoadige",
+  "model": {
+    "name": "ground_stations",
+    "ensemble": 1,
+    "lead_hours": -1,
+    "releases": null
+  },
+  "input": {
+    "path": "/media/lacie2022/data/meteo/eu/it/taa/aa/merged/data/",
+    "datetime_format": "%Y-%m-%dT%H:%M:%SZ%z",
+    "timezone": "UTC"
+  },
+  "output": {
+    "path": "/media/windows/projects/hydro_forecasting/machine_learning/input/training/B001/SB007/20230323T141935/",
+    "datetime_format": "%Y-%m-%d %H:%M:%S",
+    "timezone": "UTC"
+  },
+  "log_path": "/media/windows/projects/hydro_forecasting/machine_learning/logs/training/",
+  "start_date": "20000101",
+  "start_time": null,
+  "end_date": "20230322",
+  "end_time": null,
+  "update_dates": false,
+  "delete_uncomplete": false,
+  "roi_config": null,
+  "stations_to_extract": "37230PG",
+  "variables_to_extract": "streamflow",
+  "logging_level": "info",
+  "script_version": "v0.4.0",
+  "script_authors": [
+    "ftt01 (dallatorre.daniele@gmail.com)"
+  ],
+  "email": false
+}

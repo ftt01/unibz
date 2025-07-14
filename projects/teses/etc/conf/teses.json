@@ -1,0 +1,38 @@
+{
+  "project_name": "PhD",
+  "provider_name": "meteoaltoadige",
+  "model": {
+    "name": "ground_stations",
+    "ensemble": 1,
+    "lead_hours": -1,
+    "releases": [
+      3
+    ]
+  },
+  "input" : {
+    "path": "/media/lacie2022/data/meteo/eu/it/taa/aa/online/data/",
+    "datetime_format": "%Y-%m-%dT%H:%M:%SZ%z",
+    "timezone": "UTC"
+  },
+  "output" : {
+    "path": "/media/windows/projects/teses/data/extraction/",
+    "datetime_format": "%Y-%m-%d %H:%M:%S",
+    "timezone": "Europe/Rome"
+  },
+  
+  "log_path": "/media/lacie2022/data/meteo/eu/it/taa/aa/logs/",
+  "start_date": "20221218",
+  "start_time": "00:00",
+  "end_date": "20221219",
+  "end_time": "00:00",
+  "update_dates" : false,
+
+  "roi_config": null,
+  "stations_to_extract" : ["83200MS"],
+  "variables_to_extract" : ["temperature","precipitation","global_radiation","wind_velocity"],
+  
+  "logging_level": "debug",
+  "script_version": "v0.4.0",
+  "script_authors" : ["ftt01 (dallatorre.daniele@gmail.com)"],
+  "email" : false
+}

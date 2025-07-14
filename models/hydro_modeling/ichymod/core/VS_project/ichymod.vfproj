@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectCreator="Intel Fortran" Keyword="Console Application" Version="11.0" ProjectIdGuid="{E5080484-58BD-4425-8715-A39CC298F862}">
+	<Platforms>
+		<Platform Name="Win32"/>
+		<Platform Name="x64"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" WarnInterfaces="true" Traceback="true" BoundsCheck="true" StackFrameCheck="true" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
+		<Configuration Name="Debug|x64">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" WarnInterfaces="true" Traceback="true" BoundsCheck="true" StackFrameCheck="true" RuntimeLibrary="rtMultiThreadedDebugDLL"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
+		<Configuration Name="Release|Win32">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" RuntimeLibrary="rtMultiThreadedDLL"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
+		<Configuration Name="Release|x64">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Preprocess="preprocessYes" RuntimeLibrary="rtMultiThreadedDLL"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" SubSystem="subSystemConsole"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/>
+				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration></Configurations>
+	<Files>
+		<Filter Name="Header Files" Filter="fi;fd;h;inc"/>
+		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
+		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
+		<File RelativePath="..\src\assign_IC.f90"/>
+		<File RelativePath="..\src\assignIC_MC.f90"/>
+		<File RelativePath="..\src\assignIC_PDM.f90"/>
+		<File RelativePath="..\src\count_hours.f90"/>
+		<File RelativePath="..\src\count_topo_unit.f90"/>
+		<File RelativePath="..\src\CREATE_DIRECTORY.f90"/>
+		<File RelativePath="..\src\find_Q_P_T.f90"/>
+		<File RelativePath="..\src\get_daily_values.f90"/>
+		<File RelativePath="..\src\get_time_window_and_mode.f90"/>
+		<File RelativePath="..\src\hydro_balance.f90"/>
+		<File RelativePath="..\src\hydro_parameters.f90"/>
+		<File RelativePath="..\src\hydrological_model.f90"/>
+		<File RelativePath="..\src\init.f90"/>
+		<File RelativePath="..\src\MAIN.f90"/>
+		<File RelativePath="..\src\Makefile"/>
+		<File RelativePath="..\src\MC.f90"/>
+		<File RelativePath="..\src\mod_calibration.f90"/>
+		<File RelativePath="..\src\mod_DA.f90"/>
+		<File RelativePath="..\src\mod_DA_subs.f90"/>
+		<File RelativePath="..\src\mod_date_and_time.f90"/>
+		<File RelativePath="..\src\mod_elev_energy_bands.f90"/>
+		<File RelativePath="..\src\mod_evaluation.f90"/>
+		<File RelativePath="..\src\mod_functions.f90"/>
+		<File RelativePath="..\src\mod_get_IC.f90"/>
+		<File RelativePath="..\src\mod_global_variables.f90"/>
+		<File RelativePath="..\src\mod_IC.f90"/>
+		<File RelativePath="..\src\mod_init.f90"/>
+		<File RelativePath="..\src\mod_meteo.f90"/>
+		<File RelativePath="..\src\mod_meteo_init.f90"/>
+		<File RelativePath="..\src\mod_meteo_reading.f90"/>
+		<File RelativePath="..\src\mod_meteo_setting.f90"/>
+		<File RelativePath="..\src\mod_meteo_support_subs.f90"/>
+		<File RelativePath="..\src\mod_output.f90"/>
+		<File RelativePath="..\src\mod_parameters.f90"/>
+		<File RelativePath="..\src\mod_random_generation.f90"/>
+		<File RelativePath="..\src\mod_state_variables.f90"/>
+		<File RelativePath="..\src\mod_topology.f90"/>
+		<File RelativePath="..\src\PDM.f90"/>
+		<File RelativePath="..\src\PDM_support_subs.f90"/>
+		<File RelativePath="..\src\PET_subs.f90"/>
+		<File RelativePath="..\src\PREPROCESSING.f90"/>
+		<File RelativePath="..\src\PSO.f90"/>
+		<File RelativePath="..\src\read_elev_energy_bands.f90"/>
+		<File RelativePath="..\src\read_input_file.f90"/>
+		<File RelativePath="..\src\read_junction.f90"/>
+		<File RelativePath="..\src\read_nodelinks.f90"/>
+		<File RelativePath="..\src\read_raster_map.f90"/>
+		<File RelativePath="..\src\read_reaches.f90"/>
+		<File RelativePath="..\src\read_reservoir.f90"/>
+		<File RelativePath="..\src\read_seq_models.f90"/>
+		<File RelativePath="..\src\read_subbs.f90"/>
+		<File RelativePath="..\src\read_topo_elements.f90"/>
+		<File RelativePath="..\src\readQ.f90"/>
+		<File RelativePath="..\src\reservoirs.f90"/>
+		<File RelativePath="..\src\snow.f90"/>
+		<File RelativePath="..\src\SOLVEPROBLEM.f90"/>
+		<File RelativePath="..\src\SUBSERVICE.f90"/>
+		<File RelativePath="..\src\through_topology.f90"/>
+		<File RelativePath="..\src\topology.f90"/>
+		<File RelativePath="..\src\VARS_COMMON.f90"/>
+		<File RelativePath="..\src\VARS_TYPE.f90"/></Filter></Files>
+	<Globals/></VisualStudioProject>

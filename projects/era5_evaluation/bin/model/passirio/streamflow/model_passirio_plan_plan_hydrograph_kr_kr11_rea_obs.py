@@ -1,0 +1,1024 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import sys
+
+lib_dir = "/home/daniele/documents/github/ftt01/phd/share/lib"
+sys.path.insert(0, lib_dir)
+
+
+# In[2]:
+
+
+from lib import *
+
+
+# In[3]:
+
+
+wdir = "/home/daniele/documents/github/ftt01/phd/projects/era5_evaluation/"
+current = DataCollector(configPath=wdir + "etc/conf/")
+
+
+# In[4]:
+
+
+### simulation selection #############################################################################
+
+kriging_data_calibration = DataCollector(configPath=wdir + "etc/conf/")
+
+current_phase = "calibration_best_plan"
+current_basin = "passirio"
+current_type = "kriging"
+current_node = "plan"
+
+kriging_data_calibration.retrieveData(current_phase, current_basin, current_type, current_node)
+
+### end simulation selection ##########################################################################
+### simulation selection #############################################################################
+
+kriging_data_validation = DataCollector(configPath=wdir + "etc/conf/")
+
+current_phase = "validation_best_plan"
+current_basin = "passirio"
+current_type = "kriging"
+current_node = "plan"
+
+kriging_data_validation.retrieveData(current_phase, current_basin, current_type, current_node)
+
+### end simulation selection ##########################################################################
+kriging_data = pd.concat( [kriging_data_calibration.model_flow, kriging_data_validation.model_flow] )
+
+
+# In[5]:
+
+
+### simulation selection #############################################################################
+
+kriging_11_data_calibration = DataCollector(configPath=wdir + "etc/conf/")
+
+current_phase = "calibration_best_plan"
+current_basin = "passirio"
+current_type = "kriging_11"
+current_node = "plan"
+
+kriging_11_data_calibration.retrieveData(current_phase, current_basin, current_type, current_node)
+
+### end simulation selection ##########################################################################
+### simulation selection #############################################################################
+
+kriging_11_data_validation = DataCollector(configPath=wdir + "etc/conf/")
+
+current_phase = "validation_best_plan"
+current_basin = "passirio"
+current_type = "kriging_11"
+current_node = "plan"
+
+kriging_11_data_validation.retrieveData(current_phase, current_basin, current_type, current_node)
+
+### end simulation selection ##########################################################################
+kriging_11_data = pd.concat( [kriging_11_data_calibration.model_flow, kriging_11_data_validation.model_flow] )
+
+
+# In[6]:
+
+
+### simulation selection #############################################################################
+
+rea_data_calibration = DataCollector(configPath=wdir + "etc/conf/")
+
+current_phase = "calibration_best_plan"
+current_basin = "passirio"
+current_type = "reanalysis"
+current_node = "plan"
+
+rea_data_calibration.retrieveData(current_phase, current_basin, current_type, current_node)
+
+### end simulation selection ##########################################################################
+### simulation selection #############################################################################
+
+rea_data_validation = DataCollector(configPath=wdir + "etc/conf/")
+
+current_phase = "validation_best_plan"
+current_basin = "passirio"
+current_type = "reanalysis"
+current_node = "plan"
+
+rea_data_validation.retrieveData(current_phase, current_basin, current_type, current_node)
+
+### end simulation selection ##########################################################################
+rea_data = pd.concat( [rea_data_calibration.model_flow, rea_data_validation.model_flow] )
+
+
+# In[7]:
+
+
+obs_data = pd.concat( [kriging_data_calibration.obs_flow, kriging_data_validation.obs_flow] )
+
+
+# In[8]:
+
+
+# define and add to plot the vertical line between calibration and validation #
+last_date_cal = kriging_data_calibration.model_flow.index[-1]
+first_date_val = kriging_data_validation.model_flow.index[0]
+
+max_h = max( np.concatenate((kriging_data_calibration.model_flow.values, kriging_data_validation.model_flow.values,     kriging_data_calibration.obs_flow.values, kriging_data_validation.obs_flow.values)) )
+vertical_line = np.array( [0, max_h] )
+vertical_line_DF = pd.DataFrame(data=vertical_line, index=[last_date_cal, first_date_val])
+
+
+# In[9]:
+
+
+from datetime import datetime
+start_date_str = "2013-10-01T01:00:00"
+end_date_str = "2019-09-30T23:00:00"
+start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+plots = []
+
+### rea 11x8 plot ###
+plt_conf = {}
+plt_conf["label"] = 'REA11x8'
+plt_conf["color"] = '#CD001A'
+plt_conf["linewidth"] = 0.8
+plots.append( (rea_data[start_date:end_date], plt_conf) )
+
+### obs plot ###
+plt_conf = {}
+plt_conf["label"] = 'Observed'
+plt_conf["color"] = 'black'
+plt_conf["linewidth"] = 1
+plots.append( (obs_data[start_date:end_date], plt_conf) )
+
+### kriging 1x1 plot ###
+plt_conf = {}
+plt_conf["label"] = 'KR1x1'
+plt_conf["color"] = '#FE5000'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_data[start_date:end_date], plt_conf) )
+
+### kriging 11x8 plot ###
+plt_conf = {}
+plt_conf["label"] = 'KR11x8'
+plt_conf["color"] = '#16ba07'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_11_data[start_date:end_date], plt_conf) )
+
+plt_conf = {}
+plt_conf["color"] = 'black'
+plt_conf["linestyle"] = "--"
+plt_conf["linewidth"] = 0.5
+plots.append( (vertical_line_DF, plt_conf) )
+
+import matplotlib.dates as mdates
+x_major_locator=mdates.YearLocator(month=10, day=1)
+x_major_formatter=mdates.DateFormatter('%Y-%m')
+
+
+# In[10]:
+
+
+outfile_hd = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_hydrograph_kr_kr11_rea_obs_hd." + output_format
+createPlot( plots, "Time $[hour]$", "Streamflow $[m^3/hour]$", outfile_hd,     x_major_locator=x_major_locator, x_major_formatter=x_major_formatter, my_dpi=600, height=80 )
+
+outfile = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_hydrograph_kr_kr11_rea_obs." + output_format
+createPlot( plots, "Time $[hour]$", "Streamflow $[m^3/hour]$", outfile,     x_major_locator=x_major_locator, x_major_formatter=x_major_formatter, my_dpi=50, height=80 )
+
+
+# In[11]:
+
+
+from datetime import datetime
+start_date_str = "2015-10-01T01:00:00"
+end_date_str = "2016-09-30T23:00:00"
+start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+plots = []
+
+### obs plot ###
+plt_conf = {}
+plt_conf["label"] = 'Observed'
+plt_conf["color"] = 'black'
+plt_conf["linewidth"] = 1
+plots.append( (obs_data[start_date:end_date], plt_conf) )
+
+### rea 11x8 plot ###
+plt_conf = {}
+plt_conf["label"] = 'REA11x8'
+plt_conf["color"] = '#CD001A'
+plt_conf["linewidth"] = 0.8
+plots.append( (rea_data[start_date:end_date], plt_conf) )
+
+### kriging 1x1 plot ###
+plt_conf = {}
+plt_conf["label"] = 'KR1x1'
+plt_conf["color"] = '#FE5000'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_data[start_date:end_date], plt_conf) )
+
+### kriging 11x8 plot ###
+plt_conf = {}
+plt_conf["label"] = 'KR11x8'
+plt_conf["color"] = '#16ba07'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_11_data[start_date:end_date], plt_conf) )
+
+import matplotlib.dates as mdates
+x_major_locator=mdates.YearLocator(month=10, day=1)
+x_major_formatter=mdates.DateFormatter('%Y-%m')
+
+
+# In[12]:
+
+
+outfile_hd = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_hydrograph_kr_kr11_rea_obs_20152016_hd." + output_format
+createPlot( plots, "Time $[hour]$", "Streamflow $[m^3/hour]$", outfile_hd,     x_major_locator=x_major_locator, x_major_formatter=x_major_formatter, my_dpi=600, height=80 )
+
+outfile = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_hydrograph_kr_kr11_rea_20152016_obs." + output_format
+createPlot( plots, "Time $[hour]$", "Streamflow $[m^3/hour]$", outfile,     x_major_locator=x_major_locator, x_major_formatter=x_major_formatter, my_dpi=50, height=80 )
+
+
+# In[13]:
+
+
+## entire period exceedance curve evaluation
+
+from datetime import datetime
+start_date_str = "2013-10-01T01:00:00"
+end_date_str = "2019-09-30T23:00:00"
+start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+plots = []
+
+### obs plot ###
+obs_data_fd = flowDuration(obs_data[start_date:end_date].dropna())
+obs_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'Observed'
+plt_conf["color"] = 'black'
+plt_conf["linewidth"] = 1
+plots.append( (obs_data_fd, plt_conf) )
+
+### kriging 1x1 plot ###
+kriging_data_fd = flowDuration(kriging_data[start_date:end_date].dropna())
+kriging_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR1x1'
+plt_conf["color"] = '#FE5000'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_data_fd, plt_conf) )
+
+### kriging 11x8 plot ###
+kriging_11_data_fd = flowDuration(kriging_11_data[start_date:end_date].dropna())
+kriging_11_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR11x8'
+plt_conf["color"] = '#16ba07'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_11_data_fd, plt_conf) )
+
+### rea 11x8 plot ###
+rea_data_fd = flowDuration(rea_data[start_date:end_date].dropna())
+rea_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'REA11x8'
+plt_conf["color"] = '#CD001A'
+plt_conf["linewidth"] = 0.8
+plots.append( (rea_data_fd, plt_conf) )
+
+outfile_hd = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_kr_kr11_rea_obs_hd." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile_hd, xticks=[0,10,20,30,40,50,60,70,80,90,100], yscale='log', height=80, my_dpi=600 )
+
+outfile = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_kr_kr11_rea_obs." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile, xticks=[0,10,20,30,40,50,60,70,80,90,100], yscale='log', height=80, my_dpi=50 )
+
+
+# In[14]:
+
+
+## calibration period exceedance curve evaluation
+
+from datetime import datetime
+start_date_str = "2013-10-01T01:00:00"
+end_date_str = "2017-09-30T23:00:00"
+start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+plots = []
+
+### kriging 1x1 plot ###
+kriging_data_fd = flowDuration(kriging_data[start_date:end_date].dropna())
+kriging_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR1x1'
+plt_conf["color"] = '#FE5000'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_data_fd, plt_conf) )
+
+### kriging 11x8 plot ###
+kriging_11_data_fd = flowDuration(kriging_11_data[start_date:end_date].dropna())
+kriging_11_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR11x8'
+plt_conf["color"] = '#16ba07'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_11_data_fd, plt_conf) )
+
+### obs plot ###
+obs_data_fd = flowDuration(obs_data[start_date:end_date].dropna())
+obs_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'Observed'
+plt_conf["color"] = 'black'
+plt_conf["linewidth"] = 1
+plots.append( (obs_data_fd, plt_conf) )
+
+### rea 11x8 plot ###
+rea_data_fd = flowDuration(rea_data[start_date:end_date].dropna())
+rea_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'REA11x8'
+plt_conf["color"] = '#CD001A'
+plt_conf["linewidth"] = 0.8
+plots.append( (rea_data_fd, plt_conf) )
+
+outfile_hd = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_kr_kr11_rea_obs_cal_HD." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile_hd, yscale='log', height=80, my_dpi=600 )
+
+outfile = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_kr_kr11_rea_obs_cal." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile, yscale='log', height=80, my_dpi=50 )
+
+
+# In[18]:
+
+
+## validation period exceedance curve evaluation
+
+from datetime import datetime
+start_date_str = "2017-10-01T01:00:00"
+end_date_str = "2019-09-30T23:00:00"
+start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+plots = []
+
+### obs plot ###
+obs_data_fd = flowDuration(obs_data[start_date:end_date].dropna())
+obs_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'Observed'
+plt_conf["color"] = 'black'
+plt_conf["linewidth"] = 1
+plots.append( (obs_data_fd, plt_conf) )
+
+### kriging 1x1 plot ###
+kriging_data_fd = flowDuration(kriging_data[start_date:end_date].dropna())
+kriging_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR1x1'
+plt_conf["color"] = '#FE5000'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_data_fd, plt_conf) )
+
+### kriging 11x8 plot ###
+kriging_11_data_fd = flowDuration(kriging_11_data[start_date:end_date].dropna())
+kriging_11_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR11x8'
+plt_conf["color"] = '#16ba07'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_11_data_fd, plt_conf) )
+
+### rea 11x8 plot ###
+rea_data_fd = flowDuration(rea_data[start_date:end_date].dropna())
+rea_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'REA11x8'
+plt_conf["color"] = '#CD001A'
+plt_conf["linewidth"] = 0.8
+plots.append( (rea_data_fd, plt_conf) )
+
+outfile_hd = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_kr_kr11_rea_obs_val_HD." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile_hd, yscale='log', height=80, my_dpi=600 )
+
+outfile = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_kr_kr11_rea_obs_val." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile, yscale='log', height=80, my_dpi=50 )
+
+
+# In[ ]:
+
+
+## seasonal exceedance curve evaluation
+
+from datetime import datetime
+start_date_str = "2013-10-01T01:00:00"
+end_date_str = "2019-09-30T23:00:00"
+start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+# seasonal separation data - observed data
+obs_data = obs_data[start_date:end_date]
+
+obs_data_jan=obs_data.loc[(obs_data.index.month==1)]
+obs_data_feb=obs_data.loc[(obs_data.index.month==2)]
+obs_data_mar=obs_data.loc[(obs_data.index.month==3)]
+obs_data_apr=obs_data.loc[(obs_data.index.month==4)]
+obs_data_may=obs_data.loc[(obs_data.index.month==5)]
+obs_data_jun=obs_data.loc[(obs_data.index.month==6)]
+obs_data_jul=obs_data.loc[(obs_data.index.month==7)]
+obs_data_aug=obs_data.loc[(obs_data.index.month==8)]
+obs_data_sep=obs_data.loc[(obs_data.index.month==9)]
+obs_data_oct=obs_data.loc[(obs_data.index.month==10)]
+obs_data_nov=obs_data.loc[(obs_data.index.month==11)]
+obs_data_dec=obs_data.loc[(obs_data.index.month==12)]
+
+obs_data_w=pd.concat([obs_data_jan,obs_data_feb,obs_data_mar])
+obs_data_sp=pd.concat([obs_data_apr,obs_data_may,obs_data_jun])
+obs_data_su=pd.concat([obs_data_jul,obs_data_aug,obs_data_sep])
+obs_data_a=pd.concat([obs_data_oct,obs_data_nov,obs_data_dec])
+
+# seasonal separation data - kriging 1x1 data
+kriging_data = kriging_data[start_date:end_date]
+
+kriging_data_jan=kriging_data.loc[(kriging_data.index.month==1)]
+kriging_data_feb=kriging_data.loc[(kriging_data.index.month==2)]
+kriging_data_mar=kriging_data.loc[(kriging_data.index.month==3)]
+kriging_data_apr=kriging_data.loc[(kriging_data.index.month==4)]
+kriging_data_may=kriging_data.loc[(kriging_data.index.month==5)]
+kriging_data_jun=kriging_data.loc[(kriging_data.index.month==6)]
+kriging_data_jul=kriging_data.loc[(kriging_data.index.month==7)]
+kriging_data_aug=kriging_data.loc[(kriging_data.index.month==8)]
+kriging_data_sep=kriging_data.loc[(kriging_data.index.month==9)]
+kriging_data_oct=kriging_data.loc[(kriging_data.index.month==10)]
+kriging_data_nov=kriging_data.loc[(kriging_data.index.month==11)]
+kriging_data_dec=kriging_data.loc[(kriging_data.index.month==12)]
+
+kriging_data_w=pd.concat([kriging_data_jan,kriging_data_feb,kriging_data_mar])
+kriging_data_sp=pd.concat([kriging_data_apr,kriging_data_may,kriging_data_jun])
+kriging_data_su=pd.concat([kriging_data_jul,kriging_data_aug,kriging_data_sep])
+kriging_data_a=pd.concat([kriging_data_oct,kriging_data_nov,kriging_data_dec])
+
+# seasonal separation data - kriging 11x8 data
+kriging_11_data = kriging_11_data[start_date:end_date]
+
+kriging_11_data_jan=kriging_11_data.loc[(kriging_11_data.index.month==1)]
+kriging_11_data_feb=kriging_11_data.loc[(kriging_11_data.index.month==2)]
+kriging_11_data_mar=kriging_11_data.loc[(kriging_11_data.index.month==3)]
+kriging_11_data_apr=kriging_11_data.loc[(kriging_11_data.index.month==4)]
+kriging_11_data_may=kriging_11_data.loc[(kriging_11_data.index.month==5)]
+kriging_11_data_jun=kriging_11_data.loc[(kriging_11_data.index.month==6)]
+kriging_11_data_jul=kriging_11_data.loc[(kriging_11_data.index.month==7)]
+kriging_11_data_aug=kriging_11_data.loc[(kriging_11_data.index.month==8)]
+kriging_11_data_sep=kriging_11_data.loc[(kriging_11_data.index.month==9)]
+kriging_11_data_oct=kriging_11_data.loc[(kriging_11_data.index.month==10)]
+kriging_11_data_nov=kriging_11_data.loc[(kriging_11_data.index.month==11)]
+kriging_11_data_dec=kriging_11_data.loc[(kriging_11_data.index.month==12)]
+
+kriging_11_data_w=pd.concat([kriging_11_data_jan,kriging_11_data_feb,kriging_11_data_mar])
+kriging_11_data_sp=pd.concat([kriging_11_data_apr,kriging_11_data_may,kriging_11_data_jun])
+kriging_11_data_su=pd.concat([kriging_11_data_jul,kriging_11_data_aug,kriging_11_data_sep])
+kriging_11_data_a=pd.concat([kriging_11_data_oct,kriging_11_data_nov,kriging_11_data_dec])
+
+# seasonal separation data - reanalysis 11x8 data
+rea_data = rea_data[start_date:end_date]
+
+rea_data_jan=rea_data.loc[(rea_data.index.month==1)]
+rea_data_feb=rea_data.loc[(rea_data.index.month==2)]
+rea_data_mar=rea_data.loc[(rea_data.index.month==3)]
+rea_data_apr=rea_data.loc[(rea_data.index.month==4)]
+rea_data_may=rea_data.loc[(rea_data.index.month==5)]
+rea_data_jun=rea_data.loc[(rea_data.index.month==6)]
+rea_data_jul=rea_data.loc[(rea_data.index.month==7)]
+rea_data_aug=rea_data.loc[(rea_data.index.month==8)]
+rea_data_sep=rea_data.loc[(rea_data.index.month==9)]
+rea_data_oct=rea_data.loc[(rea_data.index.month==10)]
+rea_data_nov=rea_data.loc[(rea_data.index.month==11)]
+rea_data_dec=rea_data.loc[(rea_data.index.month==12)]
+
+rea_data_w=pd.concat([rea_data_jan,rea_data_feb,rea_data_mar])
+rea_data_sp=pd.concat([rea_data_apr,rea_data_may,rea_data_jun])
+rea_data_su=pd.concat([rea_data_jul,rea_data_aug,rea_data_sep])
+rea_data_a=pd.concat([rea_data_oct,rea_data_nov,rea_data_dec])
+
+
+# In[ ]:
+
+
+### autumn
+plots = []
+
+### obs plot ###
+obs_data_fd = flowDuration(obs_data_a)
+obs_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'Observed'
+plt_conf["color"] = 'black'
+plt_conf["linewidth"] = 1
+plots.append( (obs_data_fd, plt_conf) )
+
+### rea 11x8 plot ###
+rea_data_fd = flowDuration(rea_data_a)
+rea_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'REA11x8'
+plt_conf["color"] = '#CD001A'
+plt_conf["linewidth"] = 0.8
+plots.append( (rea_data_fd, plt_conf) )
+
+### kriging 1x1 plot ###
+kriging_data_fd = flowDuration(kriging_data_a)
+kriging_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR1x1'
+plt_conf["color"] = '#FE5000'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_data_fd, plt_conf) )
+
+### kriging 11x8 plot ###
+kriging_11_data_fd = flowDuration(kriging_11_data_a)
+kriging_11_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR11x8'
+plt_conf["color"] = '#16ba07'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_11_data_fd, plt_conf) )
+
+outfile_hd = current.config["output_path"] + "model/streamflow/passirio/seasonal/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_autumn_kr_kr11_rea_obs_hd." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/h]$", outfile_hd, y_lim_min=0.01, y_lim_max=250, loc="lower left", yscale='log', height=80, my_dpi=600 )
+
+outfile = current.config["output_path"] + "model/streamflow/passirio/seasonal/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_autumn_kr_kr11_rea_obs." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/h]$", outfile, y_lim_min=0.01, y_lim_max=250, loc="lower left", yscale='log', height=80, my_dpi=50 )
+
+
+# In[ ]:
+
+
+### winter
+plots = []
+
+### obs plot ###
+obs_data_fd = flowDuration(obs_data_w)
+obs_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'Observed'
+plt_conf["color"] = 'black'
+plt_conf["linewidth"] = 1
+plots.append( (obs_data_fd, plt_conf) )
+
+### rea 11x8 plot ###
+rea_data_fd = flowDuration(rea_data_w)
+rea_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'REA11x8'
+plt_conf["color"] = '#CD001A'
+plt_conf["linewidth"] = 0.8
+plots.append( (rea_data_fd, plt_conf) )
+
+### kriging 1x1 plot ###
+kriging_data_fd = flowDuration(kriging_data_w)
+kriging_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR1x1'
+plt_conf["color"] = '#FE5000'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_data_fd, plt_conf) )
+
+### kriging 11x8 plot ###
+kriging_11_data_fd = flowDuration(kriging_11_data_w)
+kriging_11_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR11x8'
+plt_conf["color"] = '#16ba07'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_11_data_fd, plt_conf) )
+
+outfile_hd = current.config["output_path"] + "model/streamflow/passirio/seasonal/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_winter_kr_kr11_rea_obs_hd." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile_hd, y_lim_min=0.01, y_lim_max=250, loc="lower left", yscale='log', height=80, my_dpi=600 )
+
+outfile = current.config["output_path"] + "model/streamflow/passirio/seasonal/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_winter_kr_kr11_rea_obs." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile, y_lim_min=0.01, y_lim_max=250, loc="lower left", yscale='log', height=80, my_dpi=50 )
+
+
+# In[ ]:
+
+
+# spring
+plots = []
+
+### obs plot ###
+obs_data_fd = flowDuration(obs_data_sp)
+obs_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+# plt_conf["label"] = 'Observed'
+plt_conf["color"] = 'black'
+plt_conf["linewidth"] = 1
+plots.append((obs_data_fd, plt_conf))
+
+### rea 11x8 plot ###
+rea_data_fd = flowDuration(rea_data_sp)
+rea_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+# plt_conf["label"] = 'REA11x8'
+plt_conf["color"] = '#CD001A'
+plt_conf["linewidth"] = 0.8
+plots.append((rea_data_fd, plt_conf))
+
+### kriging 1x1 plot ###
+kriging_data_fd = flowDuration(kriging_data_sp)
+kriging_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+# plt_conf["label"] = 'KR1x1'
+plt_conf["color"] = '#FE5000'
+plt_conf["linewidth"] = 0.8
+plots.append((kriging_data_fd, plt_conf))
+
+### kriging 11x8 plot ###
+kriging_11_data_fd = flowDuration(kriging_11_data_sp)
+kriging_11_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+# plt_conf["label"] = 'KR11x8'
+plt_conf["color"] = '#16ba07'
+plt_conf["linewidth"] = 0.8
+plots.append((kriging_11_data_fd, plt_conf))
+
+outfile_hd = current.config["output_path"] + "model/streamflow/passirio/seasonal/" +     "model_streamflow_passirio_plan_hourly_exceedance_curve_spring_kr_kr11_rea_obs_hd." + output_format
+createPlot(plots, "Exceedance Probability", "Streamflow $[m^3/h]$", outfile_hd, label="(b)",
+           y_lim_min=0.01, y_lim_max=250, loc="lower left", scale_factor=0.5, yscale='log', height=80, my_dpi=600)
+
+outfile = current.config["output_path"] + "model/streamflow/passirio/seasonal/" +     "model_streamflow_passirio_plan_hourly_exceedance_curve_spring_kr_kr11_rea_obs." + output_format
+createPlot(plots, "Exceedance Probability", "Streamflow $[m^3/h]$", outfile, label="(b)",
+           y_lim_min=0.01, y_lim_max=250, loc="lower left", scale_factor=0.5, yscale='log', height=80, my_dpi=50)
+
+
+# In[ ]:
+
+
+### summer
+plots = []
+
+### obs plot ###
+obs_data_fd = flowDuration(obs_data_su)
+obs_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'Observed'
+plt_conf["color"] = 'black'
+plt_conf["linewidth"] = 1
+plots.append( (obs_data_fd, plt_conf) )
+
+### rea 11x8 plot ###
+rea_data_fd = flowDuration(rea_data_su)
+rea_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'REA11x8'
+plt_conf["color"] = '#CD001A'
+plt_conf["linewidth"] = 0.8
+plots.append( (rea_data_fd, plt_conf) )
+
+### kriging 1x1 plot ###
+kriging_data_fd = flowDuration(kriging_data_su)
+kriging_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR1x1'
+plt_conf["color"] = '#FE5000'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_data_fd, plt_conf) )
+
+### kriging 11x8 plot ###
+kriging_11_data_fd = flowDuration(kriging_11_data_su)
+kriging_11_data_fd.dropna(inplace=True)
+
+plt_conf = {}
+plt_conf["label"] = 'KR11x8'
+plt_conf["color"] = '#16ba07'
+plt_conf["linewidth"] = 0.8
+plots.append( (kriging_11_data_fd, plt_conf) )
+
+outfile_hd = current.config["output_path"] + "model/streamflow/passirio/seasonal/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_summer_kr_kr11_rea_obs_hd." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile_hd, y_lim_min=0.01, y_lim_max=250, loc="lower left", yscale='log', height=80, my_dpi=600 )
+
+outfile = current.config["output_path"] + "model/streamflow/passirio/seasonal/" + "model_streamflow_passirio_plan_hourly_exceedance_curve_summer_kr_kr11_rea_obs." + output_format
+createPlot( plots, "Exceedance Probability", "Streamflow $[m^3/hour]$", outfile, y_lim_min=0.01, y_lim_max=250, loc="lower left", yscale='log', height=80, my_dpi=50 )
+
+
+# In[ ]:
+
+
+## CALIBRATION PERIOD NASH
+
+from datetime import datetime
+start_date_str = "2013-10-01T01:00:00"
+end_date_str = "2017-09-30T23:00:00"
+start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+kriging_nash = evaluateNash( obs_data[start_date:end_date], kriging_data[start_date:end_date], round_el=2 )
+print("KR1x1 NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_nash))
+
+kriging_11_nash = evaluateNash( obs_data[start_date:end_date], kriging_11_data[start_date:end_date], round_el=2 )
+print("KR11x8 NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_11_nash))
+
+rea_nash = evaluateNash( obs_data[start_date:end_date], rea_data[start_date:end_date], round_el=2 )
+print("REA11x8 NASH from " + start_date_str + " to " + end_date_str + ": " + str(rea_nash))
+
+
+# In[ ]:
+
+
+## VALIDATION PERIOD NASH
+
+from datetime import datetime
+start_date_str = "2017-10-01T01:00:00"
+end_date_str = "2019-09-30T23:00:00"
+start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+kriging_nash = evaluateNash( obs_data[start_date:end_date], kriging_data[start_date:end_date], round_el=2 )
+print("KR1x1 NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_nash))
+
+kriging_11_nash = evaluateNash( obs_data[start_date:end_date], kriging_11_data[start_date:end_date], round_el=2 )
+print("KR11x8 NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_11_nash))
+
+rea_nash = evaluateNash( obs_data[start_date:end_date], rea_data[start_date:end_date], round_el=2 )
+print("REA11x8 NASH from " + start_date_str + " to " + end_date_str + ": " + str(rea_nash))
+
+
+# In[ ]:
+
+
+# ## SEASONAL NASH OVER CALIBRATION PERIOD
+
+# from datetime import datetime
+# start_date_str = "2013-10-01T01:00:00"
+# end_date_str = "2017-09-30T23:00:00"
+# start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+# end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+# # seasonal separation data - observed data
+# obs_data_local = obs_data[start_date:end_date]
+
+# obs_data_local_jan=obs_data_local.loc[(obs_data_local.index.month==1)]
+# obs_data_local_feb=obs_data_local.loc[(obs_data_local.index.month==2)]
+# obs_data_local_mar=obs_data_local.loc[(obs_data_local.index.month==3)]
+# obs_data_local_apr=obs_data_local.loc[(obs_data_local.index.month==4)]
+# obs_data_local_may=obs_data_local.loc[(obs_data_local.index.month==5)]
+# obs_data_local_jun=obs_data_local.loc[(obs_data_local.index.month==6)]
+# obs_data_local_jul=obs_data_local.loc[(obs_data_local.index.month==7)]
+# obs_data_local_aug=obs_data_local.loc[(obs_data_local.index.month==8)]
+# obs_data_local_sep=obs_data_local.loc[(obs_data_local.index.month==9)]
+# obs_data_local_oct=obs_data_local.loc[(obs_data_local.index.month==10)]
+# obs_data_local_nov=obs_data_local.loc[(obs_data_local.index.month==11)]
+# obs_data_local_dec=obs_data_local.loc[(obs_data_local.index.month==12)]
+
+# obs_data_local_w=pd.concat([obs_data_local_jan,obs_data_local_feb,obs_data_local_mar])
+# obs_data_local_sp=pd.concat([obs_data_local_apr,obs_data_local_may,obs_data_local_jun])
+# obs_data_local_su=pd.concat([obs_data_local_jul,obs_data_local_aug,obs_data_local_sep])
+# obs_data_local_a=pd.concat([obs_data_local_oct,obs_data_local_nov,obs_data_local_dec])
+
+# # seasonal separation data - kriging 1x1 data
+# kriging_data_local = kriging_data[start_date:end_date]
+
+# kriging_data_local_jan=kriging_data_local.loc[(kriging_data_local.index.month==1)]
+# kriging_data_local_feb=kriging_data_local.loc[(kriging_data_local.index.month==2)]
+# kriging_data_local_mar=kriging_data_local.loc[(kriging_data_local.index.month==3)]
+# kriging_data_local_apr=kriging_data_local.loc[(kriging_data_local.index.month==4)]
+# kriging_data_local_may=kriging_data_local.loc[(kriging_data_local.index.month==5)]
+# kriging_data_local_jun=kriging_data_local.loc[(kriging_data_local.index.month==6)]
+# kriging_data_local_jul=kriging_data_local.loc[(kriging_data_local.index.month==7)]
+# kriging_data_local_aug=kriging_data_local.loc[(kriging_data_local.index.month==8)]
+# kriging_data_local_sep=kriging_data_local.loc[(kriging_data_local.index.month==9)]
+# kriging_data_local_oct=kriging_data_local.loc[(kriging_data_local.index.month==10)]
+# kriging_data_local_nov=kriging_data_local.loc[(kriging_data_local.index.month==11)]
+# kriging_data_local_dec=kriging_data_local.loc[(kriging_data_local.index.month==12)]
+
+# kriging_data_local_w=pd.concat([kriging_data_local_jan,kriging_data_local_feb,kriging_data_local_mar])
+# kriging_data_local_sp=pd.concat([kriging_data_local_apr,kriging_data_local_may,kriging_data_local_jun])
+# kriging_data_local_su=pd.concat([kriging_data_local_jul,kriging_data_local_aug,kriging_data_local_sep])
+# kriging_data_local_a=pd.concat([kriging_data_local_oct,kriging_data_local_nov,kriging_data_local_dec])
+
+# # seasonal separation data - kriging 11x8 data
+# kriging_11_data_local = kriging_11_data[start_date:end_date]
+
+# kriging_11_data_local_jan=kriging_11_data_local.loc[(kriging_11_data_local.index.month==1)]
+# kriging_11_data_local_feb=kriging_11_data_local.loc[(kriging_11_data_local.index.month==2)]
+# kriging_11_data_local_mar=kriging_11_data_local.loc[(kriging_11_data_local.index.month==3)]
+# kriging_11_data_local_apr=kriging_11_data_local.loc[(kriging_11_data_local.index.month==4)]
+# kriging_11_data_local_may=kriging_11_data_local.loc[(kriging_11_data_local.index.month==5)]
+# kriging_11_data_local_jun=kriging_11_data_local.loc[(kriging_11_data_local.index.month==6)]
+# kriging_11_data_local_jul=kriging_11_data_local.loc[(kriging_11_data_local.index.month==7)]
+# kriging_11_data_local_aug=kriging_11_data_local.loc[(kriging_11_data_local.index.month==8)]
+# kriging_11_data_local_sep=kriging_11_data_local.loc[(kriging_11_data_local.index.month==9)]
+# kriging_11_data_local_oct=kriging_11_data_local.loc[(kriging_11_data_local.index.month==10)]
+# kriging_11_data_local_nov=kriging_11_data_local.loc[(kriging_11_data_local.index.month==11)]
+# kriging_11_data_local_dec=kriging_11_data_local.loc[(kriging_11_data_local.index.month==12)]
+
+# kriging_11_data_local_w=pd.concat([kriging_11_data_local_jan,kriging_11_data_local_feb,kriging_11_data_local_mar])
+# kriging_11_data_local_sp=pd.concat([kriging_11_data_local_apr,kriging_11_data_local_may,kriging_11_data_local_jun])
+# kriging_11_data_local_su=pd.concat([kriging_11_data_local_jul,kriging_11_data_local_aug,kriging_11_data_local_sep])
+# kriging_11_data_local_a=pd.concat([kriging_11_data_local_oct,kriging_11_data_local_nov,kriging_11_data_local_dec])
+
+# # seasonal separation data - reanalysis 11x8 data
+# rea_data_local = rea_data[start_date:end_date]
+
+# rea_data_local_jan=rea_data_local.loc[(rea_data_local.index.month==1)]
+# rea_data_local_feb=rea_data_local.loc[(rea_data_local.index.month==2)]
+# rea_data_local_mar=rea_data_local.loc[(rea_data_local.index.month==3)]
+# rea_data_local_apr=rea_data_local.loc[(rea_data_local.index.month==4)]
+# rea_data_local_may=rea_data_local.loc[(rea_data_local.index.month==5)]
+# rea_data_local_jun=rea_data_local.loc[(rea_data_local.index.month==6)]
+# rea_data_local_jul=rea_data_local.loc[(rea_data_local.index.month==7)]
+# rea_data_local_aug=rea_data_local.loc[(rea_data_local.index.month==8)]
+# rea_data_local_sep=rea_data_local.loc[(rea_data_local.index.month==9)]
+# rea_data_local_oct=rea_data_local.loc[(rea_data_local.index.month==10)]
+# rea_data_local_nov=rea_data_local.loc[(rea_data_local.index.month==11)]
+# rea_data_local_dec=rea_data_local.loc[(rea_data_local.index.month==12)]
+
+# rea_data_local_w=pd.concat([rea_data_local_jan,rea_data_local_feb,rea_data_local_mar])
+# rea_data_local_sp=pd.concat([rea_data_local_apr,rea_data_local_may,rea_data_local_jun])
+# rea_data_local_su=pd.concat([rea_data_local_jul,rea_data_local_aug,rea_data_local_sep])
+# rea_data_local_a=pd.concat([rea_data_local_oct,rea_data_local_nov,rea_data_local_dec])
+
+# ## NASH evaluation
+# kriging_nash_w = evaluateNash( obs_data_local_w, kriging_data_local_w, round_el=2 )
+# print("KR1x1 winter NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_nash_w))
+# kriging_nash_sp = evaluateNash( obs_data_local_sp, kriging_data_local_sp, round_el=2 )
+# print("KR1x1 spring NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_nash_sp))
+# kriging_nash_su = evaluateNash( obs_data_local_su, kriging_data_local_su, round_el=2 )
+# print("KR1x1 summer NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_nash_su))
+# kriging_nash_a = evaluateNash( obs_data_local_a, kriging_data_local_a, round_el=2 )
+# print("KR1x1 autumns NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_nash_a))
+
+# kriging_11_nash_w = evaluateNash( obs_data_local_w, kriging_11_data_local_w, round_el=2 )
+# print("KR11x8 winter NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_11_nash_w))
+# kriging_11_nash_sp = evaluateNash( obs_data_local_sp, kriging_11_data_local_sp, round_el=2 )
+# print("KR11x8 spring NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_11_nash_sp))
+# kriging_11_nash_su = evaluateNash( obs_data_local_su, kriging_11_data_local_su, round_el=2 )
+# print("KR11x8 summer NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_11_nash_su))
+# kriging_11_nash_a = evaluateNash( obs_data_local_a, kriging_11_data_local_a, round_el=2 )
+# print("KR11x8 autumns NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_11_nash_a))
+
+# rea_nash_w = evaluateNash( obs_data_local_w, rea_data_local_w, round_el=2 )
+# print("REA11x8 winter NASH from " + start_date_str + " to " + end_date_str + ": " + str(rea_nash_w))
+# rea_nash_sp = evaluateNash( obs_data_local_sp, rea_data_local_sp, round_el=2 )
+# print("REA11x8 spring NASH from " + start_date_str + " to " + end_date_str + ": " + str(rea_nash_sp))
+# rea_nash_su = evaluateNash( obs_data_local_su, rea_data_local_su, round_el=2 )
+# print("REA11x8 summer NASH from " + start_date_str + " to " + end_date_str + ": " + str(rea_nash_su))
+# rea_nash_a = evaluateNash( obs_data_local_a, rea_data_local_a, round_el=2 )
+# print("REA11x8 autumns NASH from " + start_date_str + " to " + end_date_str + ": " + str(rea_nash_a))
+
+
+# In[ ]:
+
+
+# from datetime import datetime
+# start_date_str = "2015-01-01T01:00:00"
+# end_date_str = "2015-01-31T23:00:00"
+# start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+# end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+# plots = []
+
+# ### obs plot ###
+# plt_conf = {}
+# plt_conf["label"] = 'Observed'
+# plt_conf["color"] = '#fdb863'
+# plots.append( (obs_data[start_date:end_date], plt_conf) )
+
+# ### rea 11x8 plot ###
+# plt_conf = {}
+# plt_conf["label"] = 'REA11x8'
+# plt_conf["color"] = '#e66101'
+# plots.append( (rea_data[start_date:end_date], plt_conf) )
+
+# ### kriging 1x1 plot ###
+# plt_conf = {}
+# plt_conf["label"] = 'KR1x1'
+# plt_conf["color"] = '#8078bc'
+# plots.append( (kriging_data[start_date:end_date], plt_conf) )
+
+# ### kriging 11x8 plot ###
+# plt_conf = {}
+# plt_conf["label"] = 'KR11x8'
+# plt_conf["color"] = '#5e3c99'
+# plots.append( (kriging_11_data[start_date:end_date], plt_conf) )
+
+# import matplotlib.dates as mdates
+# x_major_locator=mdates.YearLocator(month=10, day=1)
+# x_major_formatter=mdates.DateFormatter('%Y-%m')
+
+# kriging_nash_w = evaluateNash( obs_data[start_date:end_date], kriging_data[start_date:end_date], round_el=2 )
+# print("KR1x1 winter NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_nash_w))
+
+# kriging_11_nash_w = evaluateNash( obs_data[start_date:end_date], kriging_11_data[start_date:end_date], round_el=2 )
+# print("KR11x8 winter NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_11_nash_w))
+
+# rea_nash_w = evaluateNash( obs_data[start_date:end_date], rea_data[start_date:end_date], round_el=2 )
+# print("REA11x8 winter NASH from " + start_date_str + " to " + end_date_str + ": " + str(rea_nash_w))
+
+# outfile_hd = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" \
+#     + "model_streamflow_passirio_plan_hourly_hydrograph_kr_kr11_rea_obs_2015_w_hd." + output_format
+# createPlot( plots, "Time $[hour]$", "Streamflow $[m^3/hour]$", outfile_hd, \
+#     x_major_locator=x_major_locator, x_major_formatter=x_major_formatter, my_dpi=600, height=80 )
+
+# outfile = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" \
+#     + "model_streamflow_passirio_plan_hourly_hydrograph_kr_kr11_rea_2015_w_obs." + output_format
+# createPlot( plots, "Time $[hour]$", "Streamflow $[m^3/hour]$", outfile, \
+#     x_major_locator=x_major_locator, x_major_formatter=x_major_formatter, my_dpi=50, height=80 )
+
+
+# In[ ]:
+
+
+# from datetime import datetime
+# start_date_str = "2016-01-01T01:00:00"
+# end_date_str = "2016-03-31T23:00:00"
+# start_date = datetime.strptime(start_date_str, '%Y-%m-%dT%H:%M:%S')
+# end_date = datetime.strptime(end_date_str, '%Y-%m-%dT%H:%M:%S')
+
+# plots = []
+
+# ### obs plot ###
+# plt_conf = {}
+# plt_conf["label"] = 'Observed'
+# plt_conf["color"] = '#fdb863'
+# plots.append( (obs_data[start_date:end_date], plt_conf) )
+
+# ### rea 11x8 plot ###
+# plt_conf = {}
+# plt_conf["label"] = 'REA11x8'
+# plt_conf["color"] = '#e66101'
+# plots.append( (rea_data[start_date:end_date], plt_conf) )
+
+# ### kriging 1x1 plot ###
+# plt_conf = {}
+# plt_conf["label"] = 'KR1x1'
+# plt_conf["color"] = '#8078bc'
+# plots.append( (kriging_data[start_date:end_date], plt_conf) )
+
+# ### kriging 11x8 plot ###
+# plt_conf = {}
+# plt_conf["label"] = 'KR11x8'
+# plt_conf["color"] = '#5e3c99'
+# plots.append( (kriging_11_data[start_date:end_date], plt_conf) )
+
+# import matplotlib.dates as mdates
+# x_major_locator=mdates.YearLocator(month=10, day=1)
+# x_major_formatter=mdates.DateFormatter('%Y-%m')
+
+# kriging_nash_w = evaluateNash( obs_data[start_date:end_date], kriging_data[start_date:end_date], round_el=2 )
+# print("KR1x1 winter NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_nash_w))
+
+# kriging_11_nash_w = evaluateNash( obs_data[start_date:end_date], kriging_11_data[start_date:end_date], round_el=2 )
+# print("KR11x8 winter NASH from " + start_date_str + " to " + end_date_str + ": " + str(kriging_11_nash_w))
+
+# rea_nash_w = evaluateNash( obs_data[start_date:end_date], rea_data[start_date:end_date], round_el=2 )
+# print("REA11x8 winter NASH from " + start_date_str + " to " + end_date_str + ": " + str(rea_nash_w))
+
+# import matplotlib.dates as mdates
+# x_major_locator=mdates.YearLocator(month=10, day=1)
+# x_major_formatter=mdates.DateFormatter('%Y-%m')
+
+# outfile_hd = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" \
+#     + "model_streamflow_passirio_plan_hourly_hydrograph_kr_kr11_rea_obs_2016_w_hd." + output_format
+# createPlot( plots, "Time $[hour]$", "Streamflow $[m^3/hour]$", outfile_hd, \
+#     x_major_locator=x_major_locator, x_major_formatter=x_major_formatter, my_dpi=600, height=80 )
+
+# outfile = current.config["output_path"] + "model/streamflow/passirio/hourly/plan_plan/" \
+#     + "model_streamflow_passirio_plan_hourly_hydrograph_kr_kr11_rea_2016_w_obs." + output_format
+# createPlot( plots, "Time $[hour]$", "Streamflow $[m^3/hour]$", outfile, \
+#     x_major_locator=x_major_locator, x_major_formatter=x_major_formatter, my_dpi=50, height=80 )
+

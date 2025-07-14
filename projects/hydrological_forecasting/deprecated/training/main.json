@@ -1,0 +1,29 @@
+{
+  "project_name": "hydrological_forecasting",
+  "historical_data": {
+    "provider_name": "meteoaltoadige"
+  },
+  "forecasting_data": {
+    "provider_name": "dwd",
+    "model_name": "icon-d2-eps",
+    "releases" : [3]
+  },
+  "ml_model": {
+    "input": {
+      "path": "/media/windows/projects/hydro_forecasting/machine_learning/input/training/",
+      "datetime_format": "%Y-%m-%d %H:%M:%S",
+      "timezone": "Europe/Rome"
+    },
+    "output": {
+      "path": "/media/windows/projects/hydro_forecasting/machine_learning/output/training/"
+    }
+  },
+  "roi_config": "/home/daniele/documents/github/ftt01/phd/metadata/basins/alto_adige.json",
+  "log_path": "/media/windows/projects/hydro_forecasting/machine_learning/logs/training/",
+  "logging_level": "debug",
+  "script_authors": [
+    "ftt01 (dallatorre.daniele@gmail.com)"
+  ],
+  "script_version": "v0.1.0",
+  "email": false
+}

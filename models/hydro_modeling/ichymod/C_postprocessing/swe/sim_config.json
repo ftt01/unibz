@@ -1,0 +1,123 @@
+[
+    {
+        "basin": "passirio",
+        "sim_path": "D:\\hydrology\\works\\calibration_validation\\hydro_modelling\\Passirio\\",
+        "output_path": "OUTPUT\\FORWARD\\",
+        "input_path": "INPUT\\",
+        "simulations": [
+            {
+                "phase": "calibration_best_merano",
+                "start_date": "2013-10-01T01:00:00",
+                "end_date": "2017-09-30T23:00:00",
+                "type": [
+                    {
+                        "name": "kriging",
+                        "id": "1",
+                        "output_specific_path": "output_1\\"
+                    },
+                    {
+                        "name": "kriging_11",
+                        "id": "2",
+                        "output_specific_path": "output_2\\"
+                    },
+                    {
+                        "name": "reanalysis",
+                        "id": "3",
+                        "output_specific_path": "output_3\\"
+                    }
+                ]
+            },
+            {
+                "phase": "validation_best_merano",
+                "start_date": "2017-10-01T01:00:00",
+                "end_date": "2020-09-30T23:00:00",
+                "type": [
+                    {
+                        "name": "kriging",
+                        "id": "11",
+                        "output_specific_path": "output_11\\"
+                    },
+                    {
+                        "name": "kriging_11",
+                        "id": "22",
+                        "output_specific_path": "output_22\\"
+                    },
+                    {
+                        "name": "reanalysis",
+                        "id": "33",
+                        "output_specific_path": "output_33\\"
+                    }
+                ]
+            },
+            {
+                "phase": "calibration_best_plan",
+                "start_date": "2013-10-01T01:00:00",
+                "end_date": "2017-09-30T23:00:00",
+                "type": [
+                    {
+                        "name": "kriging",
+                        "id": "10",
+                        "output_specific_path": "output_10\\"
+                    },
+                    {
+                        "name": "kriging_11",
+                        "id": "20",
+                        "output_specific_path": "output_20\\"
+                    },
+                    {
+                        "name": "reanalysis",
+                        "id": "30",
+                        "output_specific_path": "output_30\\"
+                    }
+                ]
+            },
+            {
+                "phase": "validation_best_plan",
+                "start_date": "2017-10-01T01:00:00",
+                "end_date": "2020-09-30T23:00:00",
+                "type": [
+                    {
+                        "name": "kriging",
+                        "id": "110",
+                        "output_specific_path": "output_110\\"
+                    },
+                    {
+                        "name": "kriging_11",
+                        "id": "220",
+                        "output_specific_path": "output_220\\"
+                    },
+                    {
+                        "name": "reanalysis",
+                        "id": "330",
+                        "output_specific_path": "output_330\\"
+                    }
+                ]
+            },
+            {
+                "phase": "best_merano_cal_val",
+                "start_date": "2012-10-01T01:00:00",
+                "end_date": "2018-09-30T23:00:00",
+                "type": [
+                    {
+                        "name": "kriging",
+                        "id": "111",
+                        "output_specific_path": "output_111\\"
+                    },
+                    {
+                        "name": "kriging_11",
+                        "id": "222",
+                        "output_specific_path": "output_222\\"
+                    },
+                    {
+                        "name": "reanalysis",
+                        "id": "333",
+                        "output_specific_path": "output_333\\"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "basin": "senales"
+    }
+]

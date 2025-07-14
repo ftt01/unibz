@@ -1,0 +1,38 @@
+{
+    "temperature": {
+        "output_path": "D:\\hydrology\\data\\AA_weather_data\\temperature\\",
+        "nodes": [
+            {
+                "name": "plan",
+                "output_file": "128.txt"
+            },
+            {
+                "name": "merano",
+                "output_file": "101.txt"
+            }
+        ],
+        "index_col": "0",
+        "parse_dates": "True",
+        "skiprows": "4"
+    },
+    "discharge": {
+        "output_path": "D:\\hydrology\\works\\calibration_validation\\hydro_modelling\\Passirio\\meteo\\streamflow\\",
+        "nodes": [
+            {
+                "id": "values",
+                "name": "plan",
+                "output_file": "155.txt"
+            },
+            {
+                "id": "values",
+                "name": "merano",
+                "output_file": "118.txt"
+            }
+        ],
+        "index_col": "0",
+        "parse_dates": "True",
+        "skiprows": "5",
+        "header" : "None",
+        "names" : "['values']"
+    }
+}

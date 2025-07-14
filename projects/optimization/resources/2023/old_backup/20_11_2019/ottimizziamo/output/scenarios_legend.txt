@@ -1,0 +1,8 @@
+E0: actual prices
+E1: ARFIMAX prices
+E2:
+E3:
+
+H0: observed Q (Plan)
+H1: ICHYMOD, "perfect forecast"
+H2: ICHYMOD, "forecast"

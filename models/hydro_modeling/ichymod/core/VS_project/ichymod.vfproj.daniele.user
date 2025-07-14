@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioUserFile ProjectCreator="Intel Fortran" Keyword="Console Application" Version="11.0" ProjectIdGuid="{E5080484-58BD-4425-8715-A39CC298F862}">
+	<Configurations>
+		<Configuration Name="Debug|Win32"/>
+		<Configuration Name="Debug|x64" CommandArguments="-DWINENF -DINTELFORTRANC" WorkingDirectory="D:\projects\icon_evaluation\hydro_modeling\passirio"/>
+		<Configuration Name="Release|Win32"/>
+		<Configuration Name="Release|x64" WorkingDirectory="C:\Users\daniele\Documents\GitHub\ftt01\phd\models\hydro_modeling\ichymod\core\example"/></Configurations></VisualStudioUserFile>

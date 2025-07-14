@@ -1,0 +1,26 @@
+La centrale di Brunico è a 840.7 m.s.l.m., se si fa il delta tra questa quota e la quota serbatoio si ha il salto istantaneo.
+Salto medio circa 200m.
+produzione media annua intorno ai 150gwh.
+Rendimento 0.8
+
+COEFF. CURVA h = f(V)
+x1 = +1.21936815 E-32
+x2 = -2.78430073 E-25
+x3 = +2.30915180 E-18
+x4 = -8.69451817 E-12
+x5 = +1.80993464 E-05 
+x6 = +1027.20778
+
+CURVA:
+h = x1 * V^5 + x2*V^4 + x3*V^3 + x4*V^2 + x5*V + x6
+
+
+----DATI DIGA MONGUELFO----
+ 1056.00 Maximum water level (m) (max invaso)
+ 1055.00 Maximum regulation level (m) (max regolazione-qui inizia sfioro)
+ 1026.00 Minimum regulation level (m) (min regolazione, qui smette di turb)
+ 1052.10 Thresold for qturbmax level (m) (quota alla quale parte qturbmax, arbitraria)
+   22.00 Qturbmax (m^3 s^-1)  (q max turbinabile)
+  796.00 Spillway capacity (m^3 s^-1) 
+ 1040.50 stage at t=0  (arbitrario)
+      27 number of points in the H-V curve (vedi Monguelfo_h_V.txt)
